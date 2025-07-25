@@ -1,0 +1,87 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: rcmor
+      POSTGRES_PASSWORD: rcmor
+      POSTGRES_DB: rcmor
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "rcmor"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+
+  matchmaking-service:
+    build: ./matchmaking-service
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8083:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8084:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+
+  analytics-service:
+    build: ./analytics-service
+    ports:
+      - "8085:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/rcmor
+      SPRING_DATASOURCE_USERNAME: rcmor
+      SPRING_DATASOURCE_PASSWORD: rcmor
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
